@@ -9,6 +9,38 @@
 =========================================================
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
+<?php
+  session_start();
+
+	if (isset($_SESSION['email'])) {
+		header("Location: logout.php");
+	}
+
+  if(isset($_POST['submit'])){
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $pass = md5($password);
+    include('koneksi.php');
+    
+    $mysqli = connectdb("localhost", "root", "","bg_uas");
+    if($mysqli->connect_errno){
+      printf("Connect failed: %s\n", $mysqli->connect_error);
+      exit();
+    }
+
+    $sql = "SELECT * FROM user where email = '$email'";
+    $result = $mysqli->query($sql);
+    if($row = $result->fetch_assoc()){
+      $pass = $row['password'];
+      if($pass == md5($password)){
+        $_SESSION['email'] = $row['email'];
+        header("Location: admin.php");
+      } else {
+        echo "<script type='text/javascript'>alert('Username atau password yang anda masukkan salah');</script>";
+      }
+    }
+  }
+?>
 <!DOCTYPE html>
 <html>
 
@@ -129,6 +161,9 @@
                   </div>
                 </div>
                 <div class="text-center">
+                  <?php 
+                    if($_SESSION)
+                  ?>
                   <input type="submit" name="submit" class = "btn btn-primary my-4" value="Sign in">
                 </div>
               </form>
@@ -169,32 +204,3 @@
   <script src="assets/js/argon.js?v=1.2.0"></script>
 </body>
 </html>
-<?php
-  if(isset($_POST['submit'])){
-      $email = $_POST['email'];
-      $password = $_POST['password'];
-      $pass = md5($password);
-      include('koneksi.php');
-
-      $sql = "select * from user";
-      try {
-          $hasil = $koneksi->query($sql);
-          if ($hasil){
-              //cek password
-              while ($row = $hasil->fetch_assoc()){
-                if ($row[0]['email'] == $email) {
-                  if($row[0]['password'] == $pass){
-                    header("Location: admin.php");
-                  }
-                }
-                else{
-                  echo "<script type='text/javascript'>alert('Username atau password yang anda masukkan salah');</script>";
-                }
-              }
-          }
-      }
-      catch(Exception $ex) {
-          throw $ex;
-      }
-    }
-?>

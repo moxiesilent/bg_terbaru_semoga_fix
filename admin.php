@@ -13,6 +13,16 @@
 =========================================================
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
+<?php
+  session_start();
+
+	if (isset($_SESSION['email'])) {
+		$user = $_SESSION['email'];
+	}
+	else{
+		header("Location: login.php");
+	}
+?>
 <!DOCTYPE html>
 <html>
 
@@ -135,7 +145,7 @@
             <li class="nav-item dropdown">
               <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="media align-items-center">
-                    <a href="#!" class="dropdown-item">
+                    <a href="logout.php" class="dropdown-item">
                       <i class="ni ni-user-run"></i>
                       <span>Logout</span>
                     </a>

@@ -44,7 +44,7 @@
           <div class="row">
             <div class="col-6 collapse-brand">
               <a href="dashboard.html">
-                <img src="../assets/img/brand/blue.png">
+                <img src="assets/img/brand/blue.png">
               </a>
             </div>
             <div class="col-6 collapse-close">
@@ -110,13 +110,13 @@
         <div class="col-lg-5 col-md-7">
           <div class="card bg-secondary border-0 mb-0">
             <div class="card-body px-lg-5 py-lg-5">
-              <form method="POST" action="" role="form">
+              <form method="POST" action="login.php" role="form">
                 <div class="form-group mb-3">
                   <div class="input-group input-group-merge input-group-alternative">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                     </div>
-                    <input id="email" class="form-control" placeholder="Email" type="email" name="email" required autocomplete="email" autofocus>
+                    <input id="email" class="form-control" placeholder="Email" type="email" name="email" required autofocus>
                   </div>
                 </div>
                 <div class="form-group">
@@ -129,7 +129,7 @@
                   </div>
                 </div>
                 <div class="text-center">
-                  <button type="button" class="btn btn-primary my-4">Sign in</button>
+                  <input type="submit" name="submit" class = "btn btn-primary my-4" value="Sign in">
                 </div>
               </form>
             </div>
@@ -160,31 +160,32 @@
   </footer>
   <!-- Argon Scripts -->
   <!-- Core -->
-  <script src="../assets/vendor/jquery/dist/jquery.min.js"></script>
-  <script src="../assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../assets/vendor/js-cookie/js.cookie.js"></script>
-  <script src="../assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
-  <script src="../assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
+  <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
+  <script src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/js-cookie/js.cookie.js"></script>
+  <script src="assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
+  <script src="assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
   <!-- Argon JS -->
-  <script src="../assets/js/argon.js?v=1.2.0"></script>
+  <script src="assets/js/argon.js?v=1.2.0"></script>
 </body>
 </html>
 <?php
   if(isset($_POST['submit'])){
       $email = $_POST['email'];
-      $pass = $_POST['password'];
+      $password = $_POST['password'];
+      $pass = md5($password);
       include('koneksi.php');
 
-      $sql = "select * from user where email = '".$nama."'";
+      $sql = "select * from user";
       try {
-          $hasil = pg_query($koneksi, $sql);
+          $hasil = $koneksi->query($sql);
           if ($hasil){
               //cek password
-              while ($row = pg_fetch_row($hasil)){
-                if ($row[2] == $pass) {
-                  $_SESSION['user'] = $nama;
-                  $_SESSION['id'] = $row[0];
-                  header("Location: admin.php");
+              while ($row = $hasil->fetch_assoc()){
+                if ($row[0]['email'] == $email) {
+                  if($row[0]['password'] == $pass){
+                    header("Location: admin.php");
+                  }
                 }
                 else{
                   echo "<script type='text/javascript'>alert('Username atau password yang anda masukkan salah');</script>";

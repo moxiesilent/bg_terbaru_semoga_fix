@@ -168,5 +168,32 @@
   <!-- Argon JS -->
   <script src="../assets/js/argon.js?v=1.2.0"></script>
 </body>
-
 </html>
+<?php
+  if(isset($_POST['submit'])){
+      $email = $_POST['email'];
+      $pass = $_POST['password'];
+      include('koneksi.php');
+
+      $sql = "select * from user where email = '".$nama."'";
+      try {
+          $hasil = pg_query($koneksi, $sql);
+          if ($hasil){
+              //cek password
+              while ($row = pg_fetch_row($hasil)){
+                if ($row[2] == $pass) {
+                  $_SESSION['user'] = $nama;
+                  $_SESSION['id'] = $row[0];
+                  header("Location: admin.php");
+                }
+                else{
+                  echo "<script type='text/javascript'>alert('Username atau password yang anda masukkan salah');</script>";
+                }
+              }
+          }
+      }
+      catch(Exception $ex) {
+          throw $ex;
+      }
+    }
+?>

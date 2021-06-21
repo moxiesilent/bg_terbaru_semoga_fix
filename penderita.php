@@ -21,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
   <meta name="author" content="Creative Tim">
-  <title>Argon Dashboard - Free Dashboard for Bootstrap 4</title>
+  <title>Penderita Covid 19</title>
   <!-- Favicon -->
   <link rel="icon" href="assets/img/brand/favicon.png" type="image/png">
   <!-- Fonts -->
@@ -32,6 +32,12 @@
   <!-- Page plugins -->
   <!-- Argon CSS -->
   <link rel="stylesheet" href="assets/css/argon.css?v=1.2.0" type="text/css">
+
+  <link rel="stylesheet" href="assets_leaflet/leaflet.css" type="text/css">
+  <script src="assets_leaflet/leaflet.js" type="text/javascript"></script>  
+  <script src="assets_leaflet/leaflet.ajax.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="assets_leaflet/easy-button.css" type="text/css">
+  <script src="assets_leaflet/easy-button.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -50,21 +56,21 @@
           <!-- Nav items -->
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" href="admin.php">
+              <a class="nav-link" href="admin.php">
                 <i class="ni ni-tv-2 text-primary"></i>
                 <span class="nav-link-text">Dashboard</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="lokasi.php">
+              <a class="nav-link active" href="penderita.php">
                 <i class="ni ni-planet text-orange"></i>
-                <span class="nav-link-text">Lokasi</span>
+                <span class="nav-link-text">Penderita</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="examples/map.html">
+              <a class="nav-link" href="suspect.php">
                 <i class="ni ni-pin-3 text-primary"></i>
-                <span class="nav-link-text">Google</span>
+                <span class="nav-link-text">Suspect</span>
               </a>
             </li>
             <li class="nav-item">
@@ -148,9 +154,133 @@
     </nav>
     <!-- Header -->
     <!-- Header -->
+    <div class="header bg-primary pb-6">
+      <div class="container-fluid">
+        <div class="header-body">
+          <div class="row align-items-center py-4">
+            <div class="col-lg-6 col-7">
+              <h6 class="h2 text-white d-inline-block mb-0">Penderita</h6>
+            </div>
+            <div class="col-lg-6 col-5 text-right">
+              <a href="addlokasi.php" class="btn btn-sm btn-neutral">Tambah Penderita Covid 19</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Page content -->
     <div class="container-fluid mt--6">
+      <!-- Peta persebaran penderita -->
+      <div class="row">
+        <div class="col">
+          <div class="card border-0">
+            <div id="map" class="map-canvas" style="height: 600px;"></div>
+            <script type="text/javascript">
+
+              var map = L.map('map').setView([-1.329330, 118.281142], 5.5);
+              var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {});
+
+              var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{ maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] });
+
+              var googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{ maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] });
+
+              var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+                  maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3']
+              });
+
+              osm.addTo(map);
+              
+              var baseMaps = {
+                "OpenStreetMap": osm,
+                "Google Street":googleStreets,
+                "Google Satellite": googleSat,
+                "googleHybrid":googleHybrid
+              };
+
+              var myIcon = L.icon({
+                iconUrl: '../icons/libraries.png',
+                iconSize: [30, 40],
+                iconAnchor: [15, 40],
+              }); 
+
+              var ctEasybtn=L.easyButton(' <span>&target;</span>',
+              function() {
+                map.locate({setView : true})
+              });
+              ctEasybtn.addTo(map);
+
+              map.on('locationfound', function(e){
+                L.circle(e.latlng,{radius:e.accuracy/2}).addTo(map)
+                L.circleMarker(e.latlng).addTo(map)
+              });
+
+
+              var kabupaten = L.geoJson.ajax('geojson/indonesia_kab.geojson').addTo(map);
+
+              var overlayMaps = {"Kabupaten": kabupaten };
+              
+
+              L.control.layers(baseMaps, overlayMaps).addTo(map);
+            </script>
+          </div>
+        </div>
+      </div>
+      <!-- tabel persebaran penderita -->
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <!-- Card header -->
+            <div class="card-header border-0">
+              <h3 class="mb-0">Lokasi Persebaran Penderita Covid 19</h3>
+            </div>
+            <!-- Light table -->
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col" class="sort" data-sort="name">Project</th>
+                    <th scope="col" class="sort" data-sort="budget">Budget</th>
+                    <th scope="col" class="sort" data-sort="status">Status</th>
+                    <th scope="col">Users</th>
+                    <th scope="col" class="sort" data-sort="completion">Completion</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody class="list">
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
       
+      <!-- Footer -->
+      <footer class="footer pt-0">
+        <div class="row align-items-center justify-content-lg-between">
+          <div class="col-lg-6">
+            <div class="copyright text-center  text-lg-left  text-muted">
+              &copy; 2020 <a href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Creative Tim</a>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+              <li class="nav-item">
+                <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>
+              </li>
+              <li class="nav-item">
+                <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a href="http://blog.creative-tim.com" class="nav-link" target="_blank">Blog</a>
+              </li>
+              <li class="nav-item">
+                <a href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md" class="nav-link" target="_blank">MIT License</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </footer>
     </div>
   </div>
   <!-- Argon Scripts -->

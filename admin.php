@@ -135,7 +135,7 @@
                 Tambah Data Penderita Covid
               </button>
 
-              <!-- Modal -->
+              <!-- Modal Tambah-->
               <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                   <div class="modal-content">
@@ -227,7 +227,6 @@
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -308,7 +307,7 @@
                     <th scope="col" class="sort">Kabupaten</th>
                     <th scope="col">Alamat</th>
                     <th scope="col">Jenis</th>
-                    <th scope="col"></th>
+                    <th scope="col">Action</th>
                   </tr>
                 </thead>
                 <tbody class="list">
@@ -331,6 +330,8 @@
                     echo "<td>".$row['nama_kab']."</td>";
                     echo "<td>".$row['alamat']."</td>";
                     echo "<td>".$row['jenis']."</td>";
+                    echo "<td><form method='POST' action='updatependerita.php'><input type='hidden' value='".$row['ktp']."' name='ktp'><input type='submit' value='edit' name='submit' class='btn btn-warning btn-sm'></form>";
+                    echo "<form method='POST' action='hapuspenderita.php'><input type='hidden' value='".$row['ktp']."' name='ktp'><input type='submit' value='delete' name='hapus' class='btn btn-danger btn-sm'></form></td>";
                     echo "</tr>";
                   }
                   

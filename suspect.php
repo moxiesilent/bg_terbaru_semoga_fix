@@ -162,10 +162,16 @@
                 "googleHybrid":googleHybrid
               };
 
-              var myIcon = L.icon({
-                iconUrl: '../icons/libraries.png',
-                iconSize: [30, 40],
-                iconAnchor: [15, 40],
+              var penderitaIcon = L.icon({
+              iconUrl: 'icons/health-medical.png',
+              iconSize: [30, 40],
+              iconAnchor: [15, 40],
+              });
+
+              var susIcon = L.icon({
+              iconUrl: 'icons/meetups.png',
+              iconSize: [30, 40],
+              iconAnchor: [15, 40],
               }); 
 
               var ctEasybtn=L.easyButton(' <span>&target;</span>',
@@ -179,12 +185,38 @@
                 L.circleMarker(e.latlng).addTo(map)
               });
 
+              var penderitas = L.layerGroup([]);
+              var suspects = L.layerGroup([]);
+
+              <?php
+              include('koneksi.php');
+
+              $mysqli = connectdb("localhost", "root", "","bg_uas");
+              if($mysqli->connect_errno){
+                printf("Connect failed: %s\n", $mysqli->connect_error);
+                exit();
+              }
+              $sql = "SELECT * FROM penderita WHERE jenis='suspect'";
+              $result = $mysqli->query($sql);
+              while($row = $result->fetch_assoc()){
+                  if($row['jenis'] == 'penderita'){?>
+                  var penderita<?php echo $row['id']?> = L.marker([<?php echo $row['y'] ?>, <?php echo $row['x'] ?>], {icon:penderitaIcon}).bindPopup("<dl><dt>Nama <?php echo $row['nama'] ?></dt><dd>KTP : <?php echo $row['ktp'] ?></dd><dd>Alamat : <?php echo $row['alamat'] ?></dd><dd>Lokasi Karantina : <?php echo $row['lokasi_karantina'] ?></dd><dd>Keluhan : <?php echo $row['keluhan_sakit'] ?></dd><dd>Riawayat Perjalanan : <?php echo $row['riwayat_perjalanan'] ?></dd><dd>Status : <?php echo $row['jenis'] ?></dd></dl>");
+                  penderitas.addLayer(penderita<?php echo $row['id']?>);
+              <?php
+                  }else{?>
+                  var suspect<?php echo $row['id']?> = L.marker([<?php echo $row['y'] ?>, <?php echo $row['x'] ?>], {icon:susIcon}).bindPopup("<dl><dt>Nama <?php echo $row['nama'] ?></dt><dd>KTP : <?php echo $row['ktp'] ?></dd><dd>Alamat : <?php echo $row['alamat'] ?></dd><dd>Lokasi Karantina : <?php echo $row['lokasi_karantina'] ?></dd><dd>Keluhan : <?php echo $row['keluhan_sakit'] ?></dd><dd>Riawayat Perjalanan : <?php echo $row['riwayat_perjalanan'] ?></dd><dd>Status : <?php echo $row['jenis'] ?></dd></dl>");
+                  suspects.addLayer(suspect<?php echo $row['id']?>);
+              <?php
+                  }
+              }
+              ?>
+              penderitas.addTo(map);
+              suspects.addTo(map);
 
               var kabupaten = L.geoJson.ajax('geojson/indonesia_kab.geojson').addTo(map);
 
-              var overlayMaps = {"Kabupaten": kabupaten };
+              var overlayMaps = {"Kabupaten": kabupaten, "Penderita": penderitas, "Suspect": suspects };
               
-
               L.control.layers(baseMaps, overlayMaps).addTo(map);
             </script>
           </div>
@@ -215,7 +247,6 @@
                 <tbody class="list">
                   <!-- ambil semua data dari database -->
                   <?php
-                  include('koneksi.php');
                   $mysqli = connectdb("localhost", "root", "","bg_uas");
                   if($mysqli->connect_errno){
                     printf("Connect failed: %s\n", $mysqli->connect_error);

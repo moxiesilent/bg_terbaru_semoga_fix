@@ -279,7 +279,7 @@
               ctEasybtn.addTo(map);
 
               map.on('locationfound', function(e){
-                L.circle(e.latlng,{radius:e.accuracy/2}).addTo(map)
+                L.circle(e.latlng,{radius:e.accuracy/200}).addTo(map)
                 L.circleMarker(e.latlng).addTo(map)
               });
 

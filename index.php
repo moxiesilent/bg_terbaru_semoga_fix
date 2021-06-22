@@ -136,16 +136,16 @@
                 $res = $mysqli->query($sql);
                 while($row = $res->fetch_assoc()){
                   if($row['total'] > 5){?>
-                    var k<?php echo $row['id']?>= L.marker([ <?php echo $row['y'] ?>,<?php echo $row['x'] ?>], {style:redZone}).bindPopup("<dl><dt>Jumlah Kasus : "+ <?php echo $row['total'] ?>+"</dt></dl>");
+                    var k<?php echo $row['id']?>= L.marker([ <?php echo $row['y'] ?>,<?php echo $row['x'] ?>], {style:redZone}).bindPopup("<dl><dt>Kabupaten <?php echo $row['nama'] ?></dt><dd>Jumlah Kasus : <?php echo $row['total'] ?></dd></dl>");
                     kabTermasuk.addLayer(k<?php echo $row['id']?>);
               <?php
                   } else if ($row['total'] <= 5){
               ?>
-                  var k<?php echo $row['id']?>= L.marker([ <?php echo $row['y'] ?>,<?php echo $row['x'] ?>], {style:orangeZone}).bindPopup("<dl><dt>Jumlah Kasus : "+ <?php echo $row['total'] ?>+"</dt></dl>");
+                  var k<?php echo $row['id']?>= L.marker([ <?php echo $row['y'] ?>,<?php echo $row['x'] ?>], {style:orangeZone}).bindPopup("<dl><dt>Kabupaten <?php echo $row['nama'] ?></dt><dd>Jumlah Kasus : <?php echo $row['total'] ?></dd></dl>");
                   kabTermasuk.addLayer(k<?php echo $row['id']?>);
               <?php
                 } else {?>
-                  var k<?php echo $row['id']?>= L.marker([ <?php echo $row['y'] ?>,<?php echo $row['x'] ?>], {style:greenZone}).bindPopup("<dl><dt>Kabupaten <?php echo $row['nama'] ?> +"</dt><dd>Jumlah Kasus : "+ <?php echo $row['total'] ?>+"</dd></dl>");
+                  var k<?php echo $row['id']?>= L.marker([ <?php echo $row['y'] ?>,<?php echo $row['x'] ?>], {style:greenZone}).bindPopup("<dl><dt>Kabupaten <?php echo $row['nama'] ?></dt><dd>Jumlah Kasus : <?php echo $row['total'] ?></dd></dl>");
                   kabTermasuk.addLayer(k<?php echo $row['id']?>);
               <?php
                 }

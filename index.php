@@ -113,17 +113,45 @@
                 "googleHybrid":googleHybrid
               };
 
-              var penderitaIcon = L.icon({
-                iconUrl: 'icons/health-medical.png',
-                iconSize: [30, 40],
-                iconAnchor: [15, 40],
-              });
+              function redZone(feature){
+                return {weight:0, fillColor:"red",fillOpacity:0.5 };
+              }
+              function orangeZone(feature){
+                return {weight:0, fillColor:"orange",fillOpacity:0.5 };
+              }
+              function greenZone(feature){
+                return {weight:0, fillColor:"green",fillOpacity:0.5 };
+              }
 
-              var susIcon = L.icon({
-                iconUrl: 'icons/meetups.png',
-                iconSize: [30, 40],
-                iconAnchor: [15, 40],
-              }); 
+              var kabTermasuk = L.layerGroup([]);
+              <?php
+                include('koneksi.php');
+                $mysqli = connectdb("localhost", "root", "","bg_uas");
+                if($mysqli->connect_errno){
+                  printf("Connect failed: %s\n", $mysqli->connect_error);
+                  exit();
+                }
+
+                $sql = "SELECT a.id, a.nama_kab as nama, a.x, a.y, count(*) as total FROM `master_kabupaten` a inner join `penderita` b on a.id = b.master_kabupaten_id group by a.id";
+                $res = $mysqli->query($sql);
+                while($row = $res->fetch_assoc()){
+                  if($row['total'] > 5){?>
+                    var k<?php echo $row['id']?>= L.marker([ <?php echo $row['y'] ?>,<?php echo $row['x'] ?>], {style:redZone}).bindPopup("<dl><dt>Jumlah Kasus : "+ <?php echo $row['total'] ?>+"</dt></dl>");
+                    kabTermasuk.addLayer(k<?php echo $row['id']?>);
+              <?php
+                  } else if ($row['total'] <= 5){
+              ?>
+                  var k<?php echo $row['id']?>= L.marker([ <?php echo $row['y'] ?>,<?php echo $row['x'] ?>], {style:orangeZone}).bindPopup("<dl><dt>Jumlah Kasus : "+ <?php echo $row['total'] ?>+"</dt></dl>");
+                  kabTermasuk.addLayer(k<?php echo $row['id']?>);
+              <?php
+                } else {?>
+                  var k<?php echo $row['id']?>= L.marker([ <?php echo $row['y'] ?>,<?php echo $row['x'] ?>], {style:greenZone}).bindPopup("<dl><dt>Kabupaten <?php echo $row['nama'] ?> +"</dt><dd>Jumlah Kasus : "+ <?php echo $row['total'] ?>+"</dd></dl>");
+                  kabTermasuk.addLayer(k<?php echo $row['id']?>);
+              <?php
+                }
+              }
+              ?>
+              kabTermasuk.addTo(map);
 
               var ctEasybtn=L.easyButton(' <span>&target;</span>',
               function() {
@@ -135,38 +163,10 @@
                 L.circle(e.latlng,{radius:e.accuracy/2}).addTo(map)
                 L.circleMarker(e.latlng).addTo(map)
               });
-              
-              var penderitas = L.layerGroup([]);
-              var suspects = L.layerGroup([]);
-
-              <?php
-                include('koneksi.php');     
-                $mysqli = connectdb("localhost", "root", "","bg_uas");
-                if($mysqli->connect_errno){
-                  printf("Connect failed: %s\n", $mysqli->connect_error);
-                  exit();
-                }
-
-                $sql = "SELECT * FROM penderita";
-                $result = $mysqli->query($sql);
-                while($row = $result->fetch_assoc()){
-                  if($row['jenis'] == 'penderita'){?>
-                    var penderita<?php echo $row['id']?> = L.marker([<?php echo $row['y'] ?>, <?php echo $row['x'] ?>], {icon:penderitaIcon}).bindPopup("<?php echo $row['alamat'] ?>");
-                    penderitas.addLayer(penderita<?php echo $row['id']?>);
-                <?php
-                  }else{?>
-                  var suspect<?php echo $row['id']?> = L.marker([<?php echo $row['y'] ?>, <?php echo $row['x'] ?>], {icon:susIcon}).bindPopup("<?php echo $row['alamat'] ?>");
-                  suspects.addLayer(suspect<?php echo $row['id']?>);
-              <?php
-                  }
-                }
-              ?>
-              penderitas.addTo(map);
-              suspects.addTo(map);
 
               var kabupaten = L.geoJson.ajax('geojson/indonesia_kab.geojson').addTo(map);
 
-              var overlayMaps = {"Kabupaten": kabupaten, "Penderita": penderitas, "Suspect": suspects };
+              var overlayMaps = {"Kabupaten": kabupaten};
               
 
               L.control.layers(baseMaps, overlayMaps).addTo(map);

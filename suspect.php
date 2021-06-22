@@ -72,13 +72,13 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="penderita.php">
+              <a class="nav-link" href="penderita.php">
                 <i class="ni ni-planet text-orange"></i>
                 <span class="nav-link-text">Penderita</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="suspect.php">
+              <a class="nav-link active" href="suspect.php">
                 <i class="ni ni-pin-3 text-primary"></i>
                 <span class="nav-link-text">Suspect</span>
               </a>
@@ -125,7 +125,7 @@
         <div class="header-body">
           <div class="row align-items-center py-4">
             <div class="col-lg-6 col-7">
-              <h6 class="h2 text-white d-inline-block mb-0">Peta Persebaran Penderita Virus COVID-19</h6>
+              <h6 class="h2 text-white d-inline-block mb-0">Peta Persebaran Suspect Virus COVID-19</h6>
             </div>
             <div class="col-lg-6 col-5 text-right">
               <!-- <a href="addpenderita.php" class="btn btn-sm btn-neutral">Tambah Data Penderita Covid</a> -->
@@ -196,7 +196,7 @@
           <div class="card">
             <!-- Card header -->
             <div class="card-header border-0">
-              <h3 class="mb-0">Lokasi Persebaran Penderita Covid 19</h3>
+              <h3 class="mb-0">Lokasi Persebaran Suspect Covid 19</h3>
             </div>
             <!-- Light table -->
             <div class="table-responsive">
@@ -222,7 +222,7 @@
                     exit();
                   }
 
-                  $sql = "SELECT ktp, nama, alamat, nama_kab, nama_prop, jenis FROM penderita INNER JOIN master_kabupaten on master_kabupaten_id = master_kabupaten.id where jenis = 'penderita'";
+                  $sql = "SELECT ktp, nama, alamat, nama_kab, nama_prop, jenis FROM penderita INNER JOIN master_kabupaten on master_kabupaten_id = master_kabupaten.id where jenis = 'suspect'";
                   $result = $mysqli->query($sql);
                   while($row = $result->fetch_assoc()){
                     echo "<tr>";

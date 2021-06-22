@@ -65,7 +65,7 @@
   <!-- Navbar -->
   <nav id="navbar-main" class="navbar navbar-horizontal navbar-transparent navbar-main navbar-expand-lg navbar-light">
     <div class="container">
-      <a class="navbar-brand" href="dashboard.html">
+      <a class="navbar-brand" href="index.php">
         <img src="assets/img/brand/white.png">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,7 +75,7 @@
         <div class="navbar-collapse-header">
           <div class="row">
             <div class="col-6 collapse-brand">
-              <a href="dashboard.html">
+              <a href="index.php">
                 <img src="assets/img/brand/blue.png">
               </a>
             </div>
@@ -89,13 +89,8 @@
         </div>
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a href="" class="nav-link">
+            <a href="index.php" class="nav-link">
               <span class="nav-link-inner--text">Home</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="" class="nav-link">
-              <span class="nav-link-inner--text">Register</span>
             </a>
           </li>
         </ul>
@@ -172,9 +167,6 @@
           <div class="row mt-3">
             <div class="col-6">
               <a href="#" class="text-light"><small>Forgot password?</small></a>
-            </div>
-            <div class="col-6 text-right">
-              <a href="#" class="text-light"><small>Create new account</small></a>
             </div>
           </div>
         </div>

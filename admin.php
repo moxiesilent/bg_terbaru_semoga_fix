@@ -83,12 +83,6 @@
                 <span class="nav-link-text">Suspect</span>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="examples/profile.html">
-                <i class="ni ni-single-02 text-yellow"></i>
-                <span class="nav-link-text">Profile</span>
-              </a>
-            </li>
           </ul>
         </div>
       </div>
@@ -134,8 +128,106 @@
               <h6 class="h2 text-white d-inline-block mb-0">Peta Persebaran Virus COVID-19</h6>
             </div>
             <div class="col-lg-6 col-5 text-right">
-              <a href="#" class="btn btn-sm btn-neutral">New</a>
-              <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+              <!-- <a href="addpenderita.php" class="btn btn-sm btn-neutral">Tambah Data Penderita Covid</a> -->
+
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-neutral" data-toggle="modal" data-target="#exampleModal">
+                Tambah Data Penderita Covid
+              </button>
+
+              <!-- Modal -->
+              <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Tambah data penderita covid</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form action="addpenderita.php" method="POST">
+                    <div class="modal-body">
+                      
+                        <div class="form-group text-left">
+                          <label for="ktp">KTP / NIK</label>
+                          <input type="text" class="form-control" id="ktp" placeholder="123456789" name="ktp" required>
+                        </div>
+                        <div class="form-group text-left">
+                          <label for="nama">Nama</label>
+                          <input type="text" class="form-control" id="nama" placeholder="John Doe" name="nama" required>
+                        </div>
+                        <div class="form-group text-left">
+                          <label for="alamat">Alamat</label>
+                          <input type="text" class="form-control" id="alamat" placeholder="Jl. Kenangan no.50, Kertajaya, Kec. Gubeng, Kota SBY, Jawa Timur 60282" name="alamat" required>
+                        </div>
+                        <div class="form-group text-left">
+                          <label for="lokasikarantina">Lokasi Karantina</label>
+                          <input type="text" class="form-control" id="lokasikarantina" placeholder="Asrama Haji Surabaya" name="lokasikarantina" required>
+                        </div>
+                        <div class="form-group text-left">
+                          <label for="keluhan">Keluhan Sakit</label>
+                          <input type="text" class="form-control" id="keluhan" placeholder="tidak bisa mearasakan makanan, pusing, demam" name="keluhan">
+                        </div>
+                        <div class="form-group text-left">
+                          <label for="riwayat">Riwayat Perjalanan</label>
+                          <input type="text" class="form-control" id="riwayat" placeholder="surabaya - madura" name="riwayat">
+                        </div>
+                        <div class="form-group text-left">
+                          <label>Jenis Pasien</label>
+                          <div class="custom-control custom-radio mb-3">
+                            <input type="radio" id="penderita" name="jenis" class="custom-control-input" value="penderita">
+                            <label class="custom-control-label" for="penderita">Penderita</label>
+                          </div>
+                          <div class="custom-control custom-radio">
+                            <input type="radio" id="suspect" name="jenis" class="custom-control-input" value="suspect">
+                            <label class="custom-control-label" for="suspect">Suspect</label>
+                          </div>
+                          <br>
+                          <div class="form-group text-left">
+                          <label for="kabupaten">Example select</label>
+                          <select class="form-control" id="kabupaten" name="kabupaten">
+
+                            <?php
+                            include('koneksi.php');
+
+                            $mysqli = connectdb("localhost", "root", "","bg_uas");
+                            if($mysqli->connect_errno){
+                              printf("Connect failed: %s\n", $mysqli->connect_error);
+                              exit();
+                            }
+
+                            $sql = "SELECT * FROM master_kabupaten";
+                            $result = $mysqli->query($sql);
+                            while($row = $result->fetch_assoc()){
+                              echo "<option>";
+                              echo $row['nama_kab'];
+                              echo "</option>";
+                            }
+                            
+                            ?>
+                          </select>
+                        </div>
+                        </div>
+                        <div class="form-group text-left">
+                          <label for="x">Lokasi koordinat X</label>
+                          <input type="text" class="form-control" id="x" placeholder="112.759989" name="x">
+                        </div>
+                        <div class="form-group text-left">
+                          <label for="y">Lokasi koordinat Y</label>
+                          <input type="text" class="form-control" id="y" placeholder="-7.279482" name="y">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <input type="submit" name="submit" value="Tambah Data" class="btn btn-primary">
+                    </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -212,13 +304,37 @@
                   <tr>
                     <th scope="col" class="sort">KTP</th>
                     <th scope="col" class="sort">Nama</th>
+                    <th scope="col">Provinsi</th>
                     <th scope="col" class="sort">Kabupaten</th>
                     <th scope="col">Alamat</th>
+                    <th scope="col">Jenis</th>
                     <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody class="list">
+                  <!-- ambil semua data dari database -->
+                  <?php
 
+                  $mysqli = connectdb("localhost", "root", "","bg_uas");
+                  if($mysqli->connect_errno){
+                    printf("Connect failed: %s\n", $mysqli->connect_error);
+                    exit();
+                  }
+
+                  $sql = "SELECT ktp, nama, alamat, nama_kab, nama_prop, jenis FROM penderita INNER JOIN master_kabupaten on master_kabupaten_id = master_kabupaten.id";
+                  $result = $mysqli->query($sql);
+                  while($row = $result->fetch_assoc()){
+                    echo "<tr>";
+                    echo "<td>".$row['ktp']."</td>";
+                    echo "<td>".$row['nama']."</td>";
+                    echo "<td>".$row['nama_prop']."</td>";
+                    echo "<td>".$row['nama_kab']."</td>";
+                    echo "<td>".$row['alamat']."</td>";
+                    echo "<td>".$row['jenis']."</td>";
+                    echo "</tr>";
+                  }
+                  
+                  ?>
                 </tbody>
               </table>
             </div>
@@ -254,6 +370,7 @@
       </footer>
     </div>
 
+
   </div>
   <!-- Argon Scripts -->
   <!-- Core -->
@@ -267,6 +384,7 @@
   <script src="assets/vendor/chart.js/dist/Chart.extension.js"></script>
   <!-- Argon JS -->
   <script src="assets/js/argon.js?v=1.2.0"></script>
+
 </body>
 
 </html>

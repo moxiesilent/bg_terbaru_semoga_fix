@@ -291,11 +291,11 @@
               $result = $mysqli->query($sql);
               while($row = $result->fetch_assoc()){
                   if($row['jenis'] == 'penderita'){?>
-                  var penderita<?php echo $row['id']?> = L.marker([<?php echo $row['y'] ?>, <?php echo $row['x'] ?>], {icon:penderitaIcon}).bindPopup("<dl><dd> <?php echo $row['alamat'] ?>");
+                  var penderita<?php echo $row['id']?> = L.marker([<?php echo $row['y'] ?>, <?php echo $row['x'] ?>], {icon:penderitaIcon}).bindPopup("<dl><dt>Nama <?php echo $row['nama'] ?></dt><dd>KTP : <?php echo $row['ktp'] ?></dd><dd>Alamat : <?php echo $row['alamat'] ?></dd><dd>Lokasi Karantina : <?php echo $row['lokasi_karantina'] ?></dd><dd>Keluhan : <?php echo $row['keluhan_sakit'] ?></dd><dd>Riawayat Perjalanan : <?php echo $row['riwayat_perjalanan'] ?></dd><dd>Status : <?php echo $row['jenis'] ?></dd></dl>");
                   penderitas.addLayer(penderita<?php echo $row['id']?>);
               <?php
                   }else{?>
-                  var suspect<?php echo $row['id']?> = L.marker([<?php echo $row['y'] ?>, <?php echo $row['x'] ?>], {icon:susIcon}).bindPopup("<?php echo $row['alamat'] ?>");
+                  var suspect<?php echo $row['id']?> = L.marker([<?php echo $row['y'] ?>, <?php echo $row['x'] ?>], {icon:susIcon}).bindPopup("<dl><dt>Nama <?php echo $row['nama'] ?></dt><dd>KTP : <?php echo $row['ktp'] ?></dd><dd>Alamat : <?php echo $row['alamat'] ?></dd><dd>Lokasi Karantina : <?php echo $row['lokasi_karantina'] ?></dd><dd>Keluhan : <?php echo $row['keluhan_sakit'] ?></dd><dd>Riawayat Perjalanan : <?php echo $row['riwayat_perjalanan'] ?></dd><dd>Status : <?php echo $row['jenis'] ?></dd></dl>");
                   suspects.addLayer(suspect<?php echo $row['id']?>);
               <?php
                   }
